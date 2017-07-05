@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style>
+			*{
+				padding: 0;margin: 0;
+			}
+			ul li{
+				list-style-type: none;
+			}
+			#box{
+				width: 611px;
+				height: 262px;
+				position: relative;
+				border: 1px solid #000;
+				margin: 0 auto;
+				margin-top: 100px;
+			}
+			img{
+				width: 611px;
+				height: 262px;
+				position: absolute;
+				
+			}
+			ul{
+				position: absolute;
+				top: 0;
+				left: 236px;
+				z-index: 999;
+			}
+			li{
+				width: 20px;
+				height: 20px;
+				margin-left: 10px;
+				background-color: #fff;
+				border-radius: 50%;
+				float: left;
+				margin-top: 232px;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<script type="text/javascript">
+		function $(id){
+			return document.getElementById(id);
+		}
+		//淡入淡出图片序号
+		var currInOrd = 1;
+		var currOutOrd = 0;
+		var timer = null;
+		//自动变换
+		function autoChange(){
+			timer = setInterval(goStep,3000);
+		}
+		
+		function goStep(){
+			
+			currInOrd++;
+			currOutOrd++;
+			if(currInOrd>5){
+				currInOrd =1;
+			}
+			if(currOutOrd>5){
+				currOutOrd = 1;
+			}
+			fadeInOut();
+			
+			changeBtnColor();
+			
+		}
+		
+		function goImg(ord){
+			currOutOrd = currInOrd;
+			currInOrd = ord;
+			
+			fadeInOut();
+			
+			changeBtnColor();
+			
+		}
+		
+		var fadeInOutTimer = null;
+		function fadeInOut(){
+			
+			fadeInOutInit();
+			
+			fadeInOutTimer = setInterval(fadeInOutStep,100);
+		}
+		
+		function fadeInOutInit(){
+			currOpacity = 1;
+			for(var i=0;i<5;i++){
+				$("box").children[i].style.left = "-10000px";
+			}
+			$("box").children[currInOrd-1].style.left = "0px";
+			$("box").children[currOutOrd-1].style.left = "0px";
+		}
+		
+		var currOpacity =1;
+		function fadeInOutStep(){
+			currOpacity -= 0.05;
+			if(currOpacity<=0){
+				window.clearInterval(fadeInOutTimer);
+			}
+			
+			$("box").children[currInOrd-1].style.opacity = 1-currOpacity;
+			$("box").children[currOutOrd-1].style.opacity = currOpacity;
+		}
+		
+		function changeBtnColor(){
+			
+			var ul = $("box").lastElementChild;
+			
+			for(var i=0;i<5;i++){
+				ul.children[i].style.backgroundColor = "#fff";
+			}
+			ul.children[currInOrd-1].style.backgroundColor = "red";
+		}
+		
+		function stopChange(){
+			window.clearInterval(timer);
+		}
+		
+		function initUI(){
+			var ul = $("box").lastElementChild;
+			
+			for(var i=0;i<5;i++){
+				ul.children[i].style.backgroundColor = "#fff";
+			}
+			ul.children[currInOrd-1].style.backgroundColor = "red";
+			
+			for(var i=0;i<5;i++){
+				$("box").children[0].style.zIndex = 5-i;
+			}
+			for(var i=2;i<5;i++){
+				$("box").children[i].style.left = "-10000px";
+			}
+		}
+		
+		window.onload = function(){
+			initUI();
+			autoChange();
+			
+			$("box").onmouseover = stopChange;
+			$("box").onmouseout = autoChange;
+			
+			var ul = $("box").lastElementChild;
+			for(let i=0;i<5;i++){
+				ul.children[i].onmouseover = function(){
+					goImg(i+1);
+				}
+			}	
+		}
+		
+		
+		
+	</script>
+
+	<body>
+		<div id="box">
+			<img src="img/g1.jpg" />
+			<img src="img/g2.jpg" />
+			<img src="img/g3.jpg" />
+			<img src="img/g4.jpg" />
+			<img src="img/g6.jpg" />
+			<ul>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>	
+	</body>
+</html>
+
